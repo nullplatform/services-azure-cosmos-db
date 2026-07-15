@@ -33,7 +33,11 @@ TOFU_VAR_FILE="$OUTPUT_DIR/terraform.tfvars.json"
 
 echo "$TOFU_VARIABLES" > "$TOFU_VAR_FILE"
 
-tofu -chdir="$TOFU_MODULE_DIR" init -input=false $TOFU_INIT_VARIABLES
+# -reconfigure: the deployment dir is reused across actions in the same pod, so a
+# previous action may have left .terraform/ initialized with a different backend
+# key. Each service instance uses its own remote state key, so reconfigure from the
+# provided backend-config instead of failing on "Backend configuration changed".
+tofu -chdir="$TOFU_MODULE_DIR" init -input=false -reconfigure $TOFU_INIT_VARIABLES
 
 tofu -chdir="$TOFU_MODULE_DIR" "$TOFU_ACTION" -auto-approve -var-file="$TOFU_VAR_FILE"
 
