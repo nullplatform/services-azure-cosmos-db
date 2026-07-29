@@ -1,8 +1,6 @@
 #!/bin/bash
 
-set -eoux pipefail
-
-env | grep -E '^(AZURE|ARM)' || true
+set -euo pipefail
 
 # Ensure tofu is available. On agents where tofu is not pre-installed, download
 # and cache the binary in /tmp/np-tofu-bin so it is only fetched once per pod
