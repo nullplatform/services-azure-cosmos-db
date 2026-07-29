@@ -31,8 +31,11 @@ TOFU_VAR_FILE="$OUTPUT_DIR/terraform.tfvars.json"
 
 echo "$TOFU_VARIABLES" > "$TOFU_VAR_FILE"
 
+echo "Running: tofu -chdir=$TOFU_MODULE_DIR init"
+# shellcheck disable=SC2086
 tofu -chdir="$TOFU_MODULE_DIR" init -input=false $TOFU_INIT_VARIABLES
 
+echo "Running: tofu -chdir=$TOFU_MODULE_DIR $TOFU_ACTION"
 tofu -chdir="$TOFU_MODULE_DIR" "$TOFU_ACTION" -auto-approve -var-file="$TOFU_VAR_FILE"
 
 if [ "$TOFU_ACTION" = "apply" ]; then
