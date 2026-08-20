@@ -30,7 +30,7 @@ TOFU_VARIABLES=$(jq -n \
   }')
 
 echo "Generated tfvars:"
-echo "$TOFU_VARIABLES" | jq .
+echo "$TOFU_VARIABLES" | jq '.subscription_id = "***"'
 
 # Set module directory for permissions
 TOFU_MODULE_DIR="$SERVICE_PATH/permissions"
