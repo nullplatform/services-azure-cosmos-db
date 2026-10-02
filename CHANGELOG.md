@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/nullplatform/services-azure-cosmos-db/compare/v0.1.0...v0.1.1) (2026-10-02)
+
+
+### Bug Fixes
+
+* **deps:** bump actions/checkout from 4 to 7 ([#8](https://github.com/nullplatform/services-azure-cosmos-db/issues/8)) ([c7090c2](https://github.com/nullplatform/services-azure-cosmos-db/commit/c7090c2d7a97e53b8f6c55ab94f8eb3a0ef5d3b3))
+
 ## [0.1.0](https://github.com/nullplatform/services-azure-cosmos-db/compare/0.0.1...v0.1.0) (2026-09-18)
 
 
