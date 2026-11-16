@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/nullplatform/services-azure-cosmos-db/compare/v0.1.1...v0.1.2) (2026-11-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency opentofu/opentofu to v1.13.9 ([#11](https://github.com/nullplatform/services-azure-cosmos-db/issues/11)) ([3874dbf](https://github.com/nullplatform/services-azure-cosmos-db/commit/3874dbf3972482a55899337ad8786ba35469f415))
+
 ## [0.1.1](https://github.com/nullplatform/services-azure-cosmos-db/compare/v0.1.0...v0.1.1) (2026-10-02)
 
 
