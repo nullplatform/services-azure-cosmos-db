@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0](https://github.com/nullplatform/services-azure-cosmos-db/compare/v0.1.2...v0.2.0) (2026-11-24)
+
+
+### Features
+
+* **package:** publish the service as a global package ([14d18be](https://github.com/nullplatform/services-azure-cosmos-db/commit/14d18bef4c637650985e71b18bdbf3e2ad525004))
+* **package:** publish the service as a global package ([c38bcfa](https://github.com/nullplatform/services-azure-cosmos-db/commit/c38bcfaf7f45796a1790003a93e29107cc2ec6fa))
+
 ## [0.1.2](https://github.com/nullplatform/services-azure-cosmos-db/compare/v0.1.1...v0.1.2) (2026-11-16)
 
 
