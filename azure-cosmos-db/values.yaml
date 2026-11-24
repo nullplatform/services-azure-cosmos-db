@@ -1,7 +1,28 @@
-# Azure Cosmos DB Service Configuration
-# These values are not exposed in the UI and are set via configuration
+# Azure Cosmos DB Service — static configuration. Not exposed in the UI.
+#
+# EVERY KEY HERE IS OPTIONAL and the file can stay as shipped, empty. It is the
+# highest-precedence tier of a three-tier resolution (values.yaml, then the
+# worker environment, then a derived default), meant for pinning, not for
+# configuring: an organization sets the account and resource group on the
+# worker of the np-azure-cosmos-db package (see the README) and never edits
+# this file.
+#
+# NEVER put a secret in this file — it is committed.
 
-# Azure Resource Configuration
-resource_group_name: "rg-nullplatform-demos-shared"
-cosmos_account_name: "azure-implementations"
-cosmos_account_endpoint: "https://azure-implementations.documents.azure.com:443"
+# The Cosmos DB account this service creates its databases in. The account
+# must exist: the service manages databases and containers, never accounts.
+# Otherwise from $COSMOS_ACCOUNT_NAME (required).
+cosmos_account_name: ""
+
+# Resource group of that account. Otherwise from $COSMOS_RESOURCE_GROUP, then
+# $RESOURCE_GROUP (the one a nullplatform Azure agent already carries).
+resource_group_name: ""
+
+# Endpoint of the account. Otherwise from $COSMOS_ACCOUNT_ENDPOINT, then
+# derived as https://<account>.documents.azure.com:443/.
+cosmos_account_endpoint: ""
+
+# Resource group of the Azure Web Apps the links grant access to (the link
+# assigns Cosmos SQL roles to the web app's managed identity). Otherwise from
+# $COSMOS_APP_RESOURCE_GROUP, then the account's resource group.
+app_resource_group_name: ""

@@ -1,8 +1,6 @@
 {
-  "id": "8383cb49-d027-4030-84d1-5f5c387ace8e",
   "name": "Connect",
   "slug": "connect",
-  "visible_to": [],
   "dimensions": {},
   "scopes": {},
   "assignable_to": "any",

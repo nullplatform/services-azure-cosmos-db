@@ -17,6 +17,7 @@ TOFU_VARIABLES=$(jq -n \
   --arg cosmos_account_name "$ACCOUNT_NAME" \
   --arg database_name "$DATABASE_NAME" \
   --arg app_name "$APP_NAME" \
+  --arg app_resource_group_name "$APP_RESOURCE_GROUP" \
   --argjson all_containers "$LINK_ALL_CONTAINERS" \
   --argjson permissions "$LINK_SELECTED_CONTAINERS" \
   '{
@@ -26,7 +27,8 @@ TOFU_VARIABLES=$(jq -n \
     database_name: $database_name,
     all_containers: $all_containers,
     permissions: $permissions,
-    app_name: $app_name
+    app_name: $app_name,
+    app_resource_group_name: $app_resource_group_name
   }')
 
 echo "Generated tfvars:"

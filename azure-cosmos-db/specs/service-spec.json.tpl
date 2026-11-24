@@ -1,11 +1,7 @@
 {
-  "id": "d2f57fb3-8664-43c6-bdd4-3f8f06309084",
   "name": "Azure Cosmos DB",
   "slug": "azure-cosmos-db",
   "type": "dependency",
-  "visible_to": [
-    "organization=1698562351:account=2097086864"
-  ],
   "dimensions": {},
   "scopes": {},
   "assignable_to": "any",

@@ -9,9 +9,12 @@ data "azurerm_cosmosdb_sql_database" "cosmos_database" {
   account_name        = data.azurerm_cosmosdb_account.cosmos_account.name
 }
 
+# The link grants Cosmos SQL roles to the managed identity of the Azure Web
+# App the scope deploys to (the Azure App Service scope): the app is looked
+# up by the name that scope derives, in the resource group it deploys to.
 data "azurerm_linux_web_app" "app" {
   name                = var.app_name
-  resource_group_name = "rg-azureimplementations-poc"
+  resource_group_name = var.app_resource_group_name
 }
 
 # Container-level permissions (when all_containers is false)
