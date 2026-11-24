@@ -30,3 +30,8 @@ variable "permissions" {
 variable "all_containers" {
   type = bool
 }
+
+variable "app_resource_group_name" {
+  description = "Resource group of the Azure Web App the link grants access to."
+  type        = string
+}

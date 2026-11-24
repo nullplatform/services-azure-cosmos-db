@@ -18,22 +18,47 @@ SCOPE_NRN=$(echo "$CONTEXT" | jq -r '.tags.nrn // ""')
 LINK_ALL_CONTAINERS=$(echo "$CONTEXT" | jq -r '.parameters.all_containers // .link.attributes.all_containers // false')
 LINK_SELECTED_CONTAINERS=$(echo "$CONTEXT" | jq -c '.parameters.target // []')
 
-# Read configuration from values.yaml
+# --- Configuration ---------------------------------------------------------
+# Three tiers per value: values.yaml, then the worker environment, then a
+# derived default. values.yaml outranks the environment on purpose: a value
+# set there is a pin, and an ambient variable must not override it silently.
+# values.yaml is flat (key: "value"), so a grep reads it and nothing else is
+# needed in the image.
 VALUES_FILE="$SERVICE_PATH/values.yaml"
+yaml_value() {
+  local key="$1" raw
+  raw=$(grep -E "^${key}:" "$VALUES_FILE" 2>/dev/null | head -1 | sed -E "s/^${key}:[[:space:]]*//; s/[[:space:]]*#.*$//; s/^[\"']//; s/[\"']$//") || true
+  printf '%s' "$raw"
+}
 
-if [ -f "$VALUES_FILE" ]; then
-  RESOURCE_GROUP=$(yq -r '.resource_group_name // ""' "$VALUES_FILE")
-  ACCOUNT_NAME=$(yq -r '.cosmos_account_name // ""' "$VALUES_FILE")
-  ENDPOINT=$(yq -r '.cosmos_account_endpoint // ""' "$VALUES_FILE")
-else
-  echo "WARNING: values.yaml not found at $VALUES_FILE"
-  RESOURCE_GROUP=""
-  ACCOUNT_NAME=""
-  ENDPOINT=""
+ACCOUNT_NAME=$(yaml_value cosmos_account_name)
+ACCOUNT_NAME="${ACCOUNT_NAME:-${COSMOS_ACCOUNT_NAME:-}}"
+RESOURCE_GROUP=$(yaml_value resource_group_name)
+RESOURCE_GROUP="${RESOURCE_GROUP:-${COSMOS_RESOURCE_GROUP:-${RESOURCE_GROUP:-}}}"
+ENDPOINT=$(yaml_value cosmos_account_endpoint)
+ENDPOINT="${ENDPOINT:-${COSMOS_ACCOUNT_ENDPOINT:-}}"
+APP_RESOURCE_GROUP=$(yaml_value app_resource_group_name)
+APP_RESOURCE_GROUP="${APP_RESOURCE_GROUP:-${COSMOS_APP_RESOURCE_GROUP:-$RESOURCE_GROUP}}"
+# The azurerm provider reads ARM_SUBSCRIPTION_ID; a nullplatform Azure agent
+# carries AZURE_SUBSCRIPTION_ID. Either works.
+SUBSCRIPTION_ID="${AZURE_SUBSCRIPTION_ID:-${ARM_SUBSCRIPTION_ID:-}}"
+
+if [ -z "$ACCOUNT_NAME" ]; then
+  echo "ERROR: cosmos_account_name is not set." >&2
+  echo "       Resolved from, in order: values.yaml, \$COSMOS_ACCOUNT_NAME." >&2
+  echo "       Set COSMOS_ACCOUNT_NAME on the worker of this package (README, Install)." >&2
+  exit 1
 fi
-
-# Subscription ID from environment
-SUBSCRIPTION_ID="$AZURE_SUBSCRIPTION_ID"
+if [ -z "$RESOURCE_GROUP" ]; then
+  echo "ERROR: resource_group_name is not set." >&2
+  echo "       Resolved from, in order: values.yaml, \$COSMOS_RESOURCE_GROUP, \$RESOURCE_GROUP." >&2
+  exit 1
+fi
+if [ -z "$SUBSCRIPTION_ID" ]; then
+  echo "ERROR: no Azure subscription: set AZURE_SUBSCRIPTION_ID or ARM_SUBSCRIPTION_ID on the worker." >&2
+  exit 1
+fi
+ENDPOINT="${ENDPOINT:-https://${ACCOUNT_NAME}.documents.azure.com:443/}"
 
 # Database name from service slug
 DATABASE_NAME=$(echo "$SERVICE_SLUG" | tr '-' '_')
@@ -102,6 +127,7 @@ export LINK_SELECTED_CONTAINERS
 export ACCOUNT_NAME
 export ENDPOINT
 export RESOURCE_GROUP
+export APP_RESOURCE_GROUP
 export SUBSCRIPTION_ID
 export DATABASE_NAME
 export ALL_CONTAINERS
